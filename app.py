@@ -2,7 +2,6 @@ from transformers import pipeline
 import os
 import pandas as pd
 """
-pipe = pipeline("image-classification", model="dima806/fairface_age_image_detection")
 
 print(pipe("./data/part1/96_1_0_20170110182515404.jpg"))
 """
@@ -17,36 +16,33 @@ The labels of each face image is embedded in the file name, formated like [age]_
     [date&time] is in the format of yyyymmddHHMMSSFFF, showing the date and time an image was collected to UTKFace
 """
 
-
-
-filename = "9_1_2_20161219190524395.jpg"
-
 genderMap = {0: "male", 1: "female"}
 raceMap = {0: "White", 1: "Black", 2: "Asian", 3: "Indian", 4: "Other"}
+pipe = pipeline("image-classification", model="dima806/fairface_age_image_detection")
 
-parts = filename.split("_")
-age = int(parts[0])
-gender = int(parts[1])
-race = int(parts[2])
-print(f"Age: {age}, Gender: {genderMap[gender]}, Race: {raceMap[race]}")
 
 data = []
-directory = './data/part1/'
+directory = './data/part3/'
+i = 1
 for name in os.listdir(directory):
-    print(directory+name)
+    print(f"Processing image {i}/{len(os.listdir(directory))}")
+    i += 1
     parts = name.split("_")
-    if not len(parts) >= 3:
+    if not len(parts) >= 4:
         continue
     age = int(parts[0])
     gender = int(parts[1])
     race = int(parts[2])
 
+    predictedAge = pipe(os.path.join(directory, name))[0]['label']
     data.append({
         "filename": name,
         "age": age,
         "gender": genderMap[gender],
-        "race": raceMap[race]
+        "race": raceMap[race],
+        "predicted_age": predictedAge
     })
 
 df = pd.DataFrame(data)
 print(df)
+df.to_csv("output.csv", index=True)
