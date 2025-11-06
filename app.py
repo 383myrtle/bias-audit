@@ -20,6 +20,13 @@ genderMap = {0: "male", 1: "female"}
 raceMap = {0: "White", 1: "Black", 2: "Asian", 3: "Indian", 4: "Other"}
 pipe = pipeline("image-classification", model="dima806/fairface_age_image_detection")
 
+def getAgeMidpoint(ageLabel):
+    if ageLabel == "more than 70":
+        return 85
+    parts = ageLabel.split("-")
+    if len(parts) == 2:
+        return (int(parts[0]) + int(parts[1])) / 2
+    return int(parts[0])
 
 data = []
 directory = './data/part3/'
@@ -40,9 +47,9 @@ for name in os.listdir(directory):
         "age": age,
         "gender": genderMap[gender],
         "race": raceMap[race],
-        "predicted_age": predictedAge
+        "predicted_age": getAgeMidpoint(predictedAge)
     })
 
 df = pd.DataFrame(data)
 print(df)
-df.to_csv("output.csv", index=True)
+df.to_csv("output.csv", index=False)
