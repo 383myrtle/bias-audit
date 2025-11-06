@@ -29,7 +29,7 @@ def getAgeMidpoint(ageLabel):
     return int(parts[0])
 
 data = []
-directory = './data/part3/'
+directory = './data/part1/'
 i = 1
 for name in os.listdir(directory):
     print(f"Processing image {i}/{len(os.listdir(directory))}")
