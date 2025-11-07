@@ -1,10 +1,6 @@
 from transformers import pipeline
 import os
 import pandas as pd
-"""
-
-print(pipe("./data/part1/96_1_0_20170110182515404.jpg"))
-"""
 
 """
 Label key
